@@ -22,9 +22,11 @@ export const calculateTotal = (items) => {
   return items.reduce((sum, item) => sum + (item.price || 0), 0);
 };
 
-export default {
+const priceHelpers = {
   formatPrice,
   formatPriceShort,
   parsePrice,
   calculateTotal
 };
+
+export default priceHelpers;

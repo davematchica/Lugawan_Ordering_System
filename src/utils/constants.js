@@ -42,7 +42,7 @@ export const ROUTES = {
   SETTINGS: '/settings'
 };
 
-export default {
+const constants = {
   APP_NAME,
   APP_VERSION,
   ORDER_STATUSES,
@@ -52,3 +52,5 @@ export default {
   BACKUP_REMINDER_DAYS,
   ROUTES
 };
+
+export default constants;

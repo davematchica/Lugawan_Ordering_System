@@ -108,7 +108,7 @@ export const deleteMenuItem = async (id) => {
   }
 };
 
-export default {
+const menuService = {
   initializeMenu,
   getAllMenuItems,
   getMenuItemsByCategory,
@@ -119,3 +119,5 @@ export default {
   addMenuItem,
   deleteMenuItem
 };
+
+export default menuService;

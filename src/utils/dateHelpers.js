@@ -37,7 +37,7 @@ export const getTodayEnd = () => endOfDay(new Date());
 
 export const getTodayKey = () => formatDateKey(new Date());
 
-export default {
+const dateHelpers = {
   formatDate,
   formatTime,
   formatDateTime,
@@ -47,3 +47,5 @@ export default {
   getTodayEnd,
   getTodayKey
 };
+
+export default dateHelpers;

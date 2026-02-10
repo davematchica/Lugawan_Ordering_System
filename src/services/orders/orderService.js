@@ -1,5 +1,5 @@
 import db from '../db';
-import { getTodayStart, getTodayEnd, formatDateKey } from '../../utils/dateHelpers';
+import { getTodayStart, getTodayEnd } from '../../utils/dateHelpers';
 import { ORDER_STATUSES } from '../../utils/constants';
 
 // Create new order
@@ -192,7 +192,7 @@ export const getPopularItems = async (startDate, endDate) => {
   }
 };
 
-export default {
+const orderService = {
   createOrder,
   getOrderById,
   getAllOrders,
@@ -206,3 +206,5 @@ export default {
   getTodayStats,
   getPopularItems
 };
+
+export default orderService;
