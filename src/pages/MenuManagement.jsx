@@ -18,7 +18,7 @@ import {
 
 const MenuManagement = () => {
   const [menuItems, setMenuItems] = useState([]);
-  const [setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -34,7 +34,7 @@ const MenuManagement = () => {
 
   useEffect(() => {
     loadMenuItems();
-  }, );
+  }, []);
 
   const loadMenuItems = async () => {
     try {
@@ -159,42 +159,50 @@ const MenuManagement = () => {
     <>
       <Header title="Menu Management" showBack />
       <PageContainer>
-        <div className="p-4 space-y-6 pb-24">
-          {/* Summary */}
-          <Card className="bg-gradient-to-br from-primary-500 to-primary-600 text-white">
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <div className="text-sm opacity-90 mb-1">Total Menu Items</div>
-              <div className="text-3xl font-bold mb-2">{menuItems.length}</div>
-              <div className="text-sm opacity-90">
-                {lugawItems.length} Lugaw • {drinkItems.length} Drinks
-              </div>
+              <div className="text-neutral-500">Loading menu items...</div>
             </div>
-          </Card>
+          </div>
+        ) : (
+          <div className="p-4 space-y-6 pb-24">
+            {/* Summary */}
+            <Card className="bg-gradient-to-br from-primary-500 to-primary-600 text-white">
+              <div className="text-center">
+                <div className="text-sm opacity-90 mb-1">Total Menu Items</div>
+                <div className="text-3xl font-bold mb-2">{menuItems.length}</div>
+                <div className="text-sm opacity-90">
+                  {lugawItems.length} Lugaw • {drinkItems.length} Drinks
+                </div>
+              </div>
+            </Card>
 
-          {/* Lugaw Items */}
-          <MenuItemList
-            title="Lugaw Items"
-            icon="🍜"
-            items={lugawItems}
-            emptyMessage="No lugaw items yet"
-            onAdd={() => openAddModal('lugaw')}
-            onToggleAvailability={handleToggleAvailability}
-            onEdit={openEditModal}
-            onDelete={handleDeleteItem}
-          />
+            {/* Lugaw Items */}
+            <MenuItemList
+              title="Lugaw Items"
+              icon="🍜"
+              items={lugawItems}
+              emptyMessage="No lugaw items yet"
+              onAdd={() => openAddModal('lugaw')}
+              onToggleAvailability={handleToggleAvailability}
+              onEdit={openEditModal}
+              onDelete={handleDeleteItem}
+            />
 
-          {/* Drinks */}
-          <MenuItemList
-            title="Drinks"
-            icon="🥤"
-            items={drinkItems}
-            emptyMessage="No drinks yet"
-            onAdd={() => openAddModal('drinks')}
-            onToggleAvailability={handleToggleAvailability}
-            onEdit={openEditModal}
-            onDelete={handleDeleteItem}
-          />
-        </div>
+            {/* Drinks */}
+            <MenuItemList
+              title="Drinks"
+              icon="🥤"
+              items={drinkItems}
+              emptyMessage="No drinks yet"
+              onAdd={() => openAddModal('drinks')}
+              onToggleAvailability={handleToggleAvailability}
+              onEdit={openEditModal}
+              onDelete={handleDeleteItem}
+            />
+          </div>
+        )}
       </PageContainer>
 
       {/* Add Item Modal */}
