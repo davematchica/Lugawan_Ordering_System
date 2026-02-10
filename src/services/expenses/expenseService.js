@@ -1,5 +1,5 @@
 import db from '../db';
-import { getTodayStart, getTodayEnd, formatDateKey } from '../../utils/dateHelpers';
+import { getTodayStart, getTodayEnd } from '../../utils/dateHelpers';
 import { startOfMonth, endOfMonth } from 'date-fns';
 
 // Create new expense
@@ -160,7 +160,7 @@ export const getThisMonthExpenses = async () => {
 // Get monthly expense summary
 export const getMonthlyExpenseSummary = async () => {
   try {
-    const expenses = await getThisMonthExpenses();
+    // const expenses = await getThisMonthExpenses();
     return getExpenseSummary(startOfMonth(new Date()), endOfMonth(new Date()));
   } catch (error) {
     console.error('Error getting monthly expense summary:', error);
@@ -168,7 +168,7 @@ export const getMonthlyExpenseSummary = async () => {
   }
 };
 
-export default {
+const expenseService = {
   createExpense,
   getExpenseById,
   getAllExpenses,
@@ -182,3 +182,5 @@ export default {
   getThisMonthExpenses,
   getMonthlyExpenseSummary
 };
+
+export default expenseService;

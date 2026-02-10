@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import PageContainer from '../components/layout/PageContainer';
 import Header from '../components/layout/Header';
@@ -22,23 +22,21 @@ const OrderDetails = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadOrder();
-  }, [orderId]);
-
-  const loadOrder = async () => {
+  const loadOrder = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getOrderById(orderId);
       setOrder(data);
     } catch (error) {
       console.error('Error loading order:', error);
-      alert('Failed to load order details.');
-      navigate('/orders');
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId]);
+
+  useEffect(() => {
+  loadOrder();
+  }, [loadOrder]);
 
   const handleStatusChange = async (newStatus) => {
     try {

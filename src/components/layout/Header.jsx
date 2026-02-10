@@ -1,9 +1,9 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ title, showBack = false, action }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   
   return (
     <header className="sticky top-0 z-40 bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg">

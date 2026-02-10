@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageContainer from '../components/layout/PageContainer';
 import Header from '../components/layout/Header';
@@ -27,10 +27,6 @@ const OrdersList = () => {
     loadOrders();
   }, []);
 
-  useEffect(() => {
-    applyFilters();
-  }, [orders, statusFilter]);
-
   const loadOrders = async () => {
     try {
       setLoading(true);
@@ -43,24 +39,25 @@ const OrdersList = () => {
     }
   };
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...orders];
 
     if (statusFilter === 'active') {
-      filtered = filtered.filter(order => 
-        order.status !== 'completed'
-      );
+      filtered = filtered.filter(order => order.status !== 'completed');
     } else if (statusFilter === 'completed') {
-      filtered = filtered.filter(order => 
-        order.status === 'completed'
-      );
+      filtered = filtered.filter(order => order.status === 'completed');
     }
 
-    // Sort by created date (newest first)
-    filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    filtered.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    );
 
     setFilteredOrders(filtered);
-  };
+  }, [orders, statusFilter]);
+
+  useEffect(() => {
+  applyFilters();
+  }, [applyFilters]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {

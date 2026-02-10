@@ -8,9 +8,9 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import QuickStats from '../components/dashboard/QuickStats';
 import PendingOrdersSummary from '../components/dashboard/PendingOrdersSummary';
 import StatusBadge from '../components/common/StatusBadge';
-import { getTodayOrders, getOrdersByStatus, getTodayStats } from '../services/orders/orderService';
+import { getOrdersByStatus, getTodayStats } from '../services/orders/orderService';
 import { getTodayExpenseTotal } from '../services/expenses/expenseService';
-import { formatPrice } from '../utils/priceHelpers';
+// import { formatPrice } from '../utils/priceHelpers';
 
 const Dashboard = () => {
   const navigate = useNavigate();

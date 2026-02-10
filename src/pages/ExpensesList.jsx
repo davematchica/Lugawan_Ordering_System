@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageContainer from '../components/layout/PageContainer';
 import Header from '../components/layout/Header';
@@ -6,11 +6,10 @@ import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { 
   getAllExpenses, 
-  getExpensesByDateRange, 
   deleteExpense 
 } from '../services/expenses/expenseService';
 import { formatPrice } from '../utils/priceHelpers';
-import { format, startOfMonth, endOfMonth, subMonths } from 'date-fns';
+import { format, startOfMonth } from 'date-fns';
 
 const EXPENSE_CATEGORIES = {
   ingredients: { name: 'Ingredients', icon: '🥬', color: 'green' },
@@ -32,10 +31,6 @@ const ExpensesList = () => {
     loadExpenses();
   }, []);
 
-  useEffect(() => {
-    applyFilters();
-  }, [expenses, filter, categoryFilter]);
-
   const loadExpenses = async () => {
     try {
       setLoading(true);
@@ -48,10 +43,9 @@ const ExpensesList = () => {
     }
   };
 
-  const applyFilters = () => {
+  const applyFilters = useCallback(() => {
     let filtered = [...expenses];
 
-    // Apply date filter
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
@@ -75,16 +69,20 @@ const ExpensesList = () => {
       });
     }
 
-    // Apply category filter
     if (categoryFilter !== 'all') {
-      filtered = filtered.filter(expense => expense.category === categoryFilter);
+      filtered = filtered.filter(
+        expense => expense.category === categoryFilter
+      );
     }
 
-    // Sort by date (newest first)
     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     setFilteredExpenses(filtered);
-  };
+  }, [expenses, filter, categoryFilter]);
+
+    useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const handleDeleteExpense = async (expenseId) => {
     if (window.confirm('Are you sure you want to delete this expense?')) {

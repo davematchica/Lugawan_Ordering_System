@@ -14,11 +14,11 @@ import {
   deleteMenuItem,
   toggleItemAvailability 
 } from '../services/menu/menuService';
-import { formatPrice } from '../utils/priceHelpers';
+// import { formatPrice } from '../utils/priceHelpers';
 
 const MenuManagement = () => {
   const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -34,7 +34,7 @@ const MenuManagement = () => {
 
   useEffect(() => {
     loadMenuItems();
-  }, []);
+  }, );
 
   const loadMenuItems = async () => {
     try {
