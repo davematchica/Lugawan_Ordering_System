@@ -1,11 +1,15 @@
 /* eslint-disable no-restricted-globals */
-const CACHE_NAME = 'lugawan-v1';
+
+// Auto-generate cache version based on build time
+const CACHE_VERSION = new Date().getTime();
+const CACHE_NAME = `lugawan-v${CACHE_VERSION}`;
+
 const urlsToCache = [
   '/',
-  '/index.html',
   '/manifest.json',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
+  // ❌ Removed /index.html - don't cache HTML!
 ];
 
 // Install - cache files
@@ -18,12 +22,40 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Fetch - serve from cache, fallback to network
+// Fetch - NETWORK FIRST for HTML, cache for others
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // Network-first for HTML files
+  if (event.request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+  
+  // Network-first for JS/CSS (to get latest bundles)
+  if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          // Cache the new version
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+  
+  // Cache-first for images and static assets
   event.respondWith(
     caches.match(event.request)
       .then((response) => response || fetch(event.request))
-      .catch(() => caches.match('/index.html'))
   );
 });
 
