@@ -133,7 +133,7 @@ const Dashboard = () => {
             <Button
               variant="secondary"
               size="lg"
-              onClick={() => navigate('/expenses/add')}
+              onClick={() => navigate('/expense/add')}
               className="flex flex-col items-center gap-2 h-24"
             >
               <span className="text-2xl">💵</span>
