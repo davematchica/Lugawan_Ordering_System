@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import InstallButton from './components/common/InstallPrompt';
 import BottomNav from './components/layout/BottomNav';
 import Dashboard from './pages/Dashboard';
 import NewOrder from './pages/NewOrder';
@@ -22,6 +23,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <InstallButton />
         <Routes>
           {/* Dashboard */}
           <Route path="/" element={<Dashboard />} />

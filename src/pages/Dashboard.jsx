@@ -25,9 +25,26 @@ const Dashboard = () => {
   });
   const [pendingOrders, setPendingOrders] = useState([]);
   const [preparingOrders, setPreparingOrders] = useState([]);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
+    
+    // Check if app is installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+    }
+
+    // Listen for install prompt
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    
+    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const loadDashboardData = async () => {
@@ -55,6 +72,23 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      alert('Install option not available yet. Please visit the app a few more times or use your browser menu to install.');
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      setIsInstalled(true);
+    }
+    
+    setDeferredPrompt(null);
   };
 
   if (loading) {
@@ -99,7 +133,7 @@ const Dashboard = () => {
             <Button
               variant="secondary"
               size="lg"
-              onClick={() => navigate('/expense/add')}
+              onClick={() => navigate('/expenses/add')}
               className="flex flex-col items-center gap-2 h-24"
             >
               <span className="text-2xl">💵</span>
@@ -138,6 +172,41 @@ const Dashboard = () => {
                   </div>
                 </div>
               </Card>
+              
+              {/* Install App Card - Only shows if not installed */}
+              {!isInstalled && (
+                <Card 
+                  hover 
+                  onClick={handleInstallClick}
+                  className={`
+                    cursor-pointer col-span-2
+                    ${deferredPrompt 
+                      ? 'bg-blue-50 border-2 border-blue-300' 
+                      : 'bg-neutral-50 border-2 border-neutral-200'
+                    }
+                  `}
+                >
+                  <div className="flex items-center gap-3 py-2">
+                    <div className="text-4xl">📱</div>
+                    <div className="flex-1">
+                      <div className="font-semibold text-neutral-800">
+                        Install App
+                      </div>
+                      <div className="text-xs text-neutral-600 mt-1">
+                        {deferredPrompt 
+                          ? 'Add to home screen for quick access & offline use'
+                          : 'Use browser menu to add to home screen'
+                        }
+                      </div>
+                    </div>
+                    {deferredPrompt && (
+                      <div className="px-3 py-1 bg-primary-500 text-white rounded-full text-xs font-bold">
+                        Ready!
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              )}
             </div>
           </div>
 
